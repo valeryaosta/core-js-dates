@@ -213,8 +213,20 @@ function getCountWeekendsInMonth(month, year) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  const firstDayOfYearDayOfWeek = firstDayOfYear.getDay() || 7;
+  const firstThursdayOfYear =
+    firstDayOfYear.getDate() + (4 - firstDayOfYearDayOfWeek);
+  const firstMondayOfYear = firstThursdayOfYear - 3;
+
+  const startDayOfYear = new Date(date.getFullYear(), 0, firstMondayOfYear);
+
+  const diff = date - startDayOfYear;
+  const oneDay = 24 * 60 * 60 * 1000;
+  const dayOfYear = Math.floor(diff / oneDay);
+
+  return Math.ceil((dayOfYear + 1) / 7);
 }
 
 /**
@@ -301,8 +313,9 @@ function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
  * Date(2022, 2, 1) => false
  * Date(2020, 2, 1) => true
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const year = date.getFullYear();
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
 module.exports = {
